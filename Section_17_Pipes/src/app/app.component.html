@@ -1,18 +1,48 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <input class="form-control" type="text" [(ngModel)]="filterQuery" placeholder="Search..">
+      <hr>
+<!-- 
+      <br> <br>
+
+      <h2> {{appData | async}}</h2> -->
+
+      <div class="row">
+        <div class="col-12">
+          <form [formGroup]="addServerForm" (ngSubmit)="addServer()" >
+          
+                <div class="col-6">
+                  <input class="form-control" type="text" placeholder="Server name" formControlName="name">
+              </div>
+              <div class="col-3">
+                <input class="form-control" type="text" placeholder="instanceType" formControlName="instanceType">
+              </div>
+              <div class="col-3">
+                <input class="form-control" type="text" placeholder="Started" formControlName="status">
+              </div>
+           
+            <button type="submit" [disabled]="!addServerForm.valid" class="btn btn-success">Add Server</button>
+          </form>
+        </div>
+      </div>
+      <!-- <button class="btn btn-primary" type="button" (click)="onAddServer()">Add Server</button> -->
       <ul class="list-group">
         <li
           class="list-group-item"
-          *ngFor="let server of servers"
+          *ngFor="let server of servers | filter:filterQuery:'status'"
           [ngClass]="getStatusClasses(server)">
           <span
             class="badge">
             {{ server.status }}
           </span>
-          <strong>{{ server.name }}</strong> | {{ server.instanceType }} | {{ server.started }}
+          <strong>{{ server.name | shorten }}</strong> |
+           {{ server.instanceType | uppercase }} |
+            {{ server.started | date }}
         </li>
       </ul>
+
+ 
     </div>
   </div>
 </div>
