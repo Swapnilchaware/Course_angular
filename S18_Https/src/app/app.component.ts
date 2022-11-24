@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';  
+import { Post } from './post.model';
+import { PostsService } from './posts.service';
 
 @Component({
   selector: 'app-root',
@@ -7,22 +10,43 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  loadedPosts = [];
+ 
+  loadedPosts: Post[] = [];
+  isFetching : boolean = false;
+  error = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,
+              private postService: PostsService) {
 
-  ngOnInit() {}
+  }
 
-  onCreatePost(postData: { title: string; content: string }) {
-    // Send Http request
-    console.log(postData);
+  ngOnInit() {
+    this.onGetPost();
+  }
+
+  onCreatePost(postData: Post)  {
+   this.postService.createPost(postData);
   }
 
   onFetchPosts() {
-    // Send Http request
+    this.onGetPost();
   }
 
   onClearPosts() {
-    // Send Http request
+    this.postService.deletePost().subscribe(res => {
+      this.loadedPosts = [];
+    }, error => {
+      this.error = error.message;
+    });
+  }
+
+  onGetPost() {
+    this.isFetching = true
+    this.postService.fetchPost().subscribe(res => {
+      this.loadedPosts = res;
+      this.isFetching = false;
+    }, error => {
+      this.error = error.message;
+    })
   }
 }

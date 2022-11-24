@@ -5,3 +5,13 @@
 .row {
   margin: 20px 0;
 }
+
+
+.myspinner {
+  width: 100vw;
+  height: 40vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
